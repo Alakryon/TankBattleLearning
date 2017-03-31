@@ -6,13 +6,19 @@
 
 ATank* ATankPlayerController::GetControlledTank() const
 {
-	return Cast<ATank>(GetPawn());
+	if (GetPawn())
+	{
+		return Cast<ATank>(GetPawn());
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp,Warning, TEXT("TankPlayerController BeginPlay"));
 	if (GetControlledTank())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Controlled tank: %s"), *(GetControlledTank()->GetName()));
@@ -21,4 +27,29 @@ void ATankPlayerController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Not controlling a tank!"));
 	}
+}
+
+void ATankPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	AimTowardsCrosshair();
+}
+
+void ATankPlayerController::AimTowardsCrosshair()
+{
+	if (GetControlledTank())
+	{
+		FVector HitLocation;
+		if (GetSightRayHitLocation(HitLocation))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit location: %s"), *(HitLocation.ToString()));
+		}
+	}
+}
+
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
+{
+	HitLocation = FVector(1.0f);
+	return true;
 }
