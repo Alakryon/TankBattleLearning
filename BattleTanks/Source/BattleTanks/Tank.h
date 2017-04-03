@@ -2,9 +2,11 @@
 
 #pragma once
 
-#include "TankAimingComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
+
+class UTankAimingComponent;
+class UTankBarrel;
 
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
@@ -17,8 +19,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetBarrelReference(UTankBarrel* BarrelToSet);
+
 protected:
 	virtual void BeginPlay() override;
 	UTankAimingComponent* TankAimingComponent = nullptr;	
 
+private:
+	UPROPERTY(EditAnywhere, Category = Firing)
+		float LaunchSpeed = 100000; //Sarting speed is 1000 m/s
 };
