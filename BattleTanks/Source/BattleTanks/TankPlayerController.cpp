@@ -52,11 +52,12 @@ void ATankPlayerController::AimTowardsCrosshair()
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 {
 	FVector CrossHairWorldLocation, CrosshairWorldDirection;
+	bool Hit = false;
 	if (GetWorldDirection(CrossHairWorldLocation, CrosshairWorldDirection))
 	{
-		GetLookVectorHitLocation(CrossHairWorldLocation, CrosshairWorldDirection, HitLocation);
+		Hit = GetLookVectorHitLocation(CrossHairWorldLocation, CrosshairWorldDirection, HitLocation);
 	}
-	return true;
+	return Hit;
 }
 
 bool ATankPlayerController::GetLookVectorHitLocation(FVector CrossHairWorldLocation, FVector CrosshairWorldDirection, FVector& HitLocation) const

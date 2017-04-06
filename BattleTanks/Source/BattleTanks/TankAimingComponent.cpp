@@ -2,6 +2,7 @@
 
 #include "BattleTanks.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "TankAimingComponent.h"
 
 UTankAimingComponent::UTankAimingComponent()
@@ -21,16 +22,53 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	if (Barrel)
+	if (Barrel && Turret)
 	{
 		FVector BarrelLocation = Barrel->GetComponentLocation();
 		FVector OutLaunchVelocity;
 		FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
-		if (UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed))
+		if (UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace))
 		{
 			FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
-			MoveBarrelTowards(AimDirection);
+			auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+			auto AimAsRotator = AimDirection.Rotation();
+			auto DeltaRotator = AimAsRotator - BarrelRotator;
+
+			if (FMath::Abs(DeltaRotator.Pitch) > 1.0f)
+			{
+				Barrel->Elevate(DeltaRotator.Pitch);
+			}
+
+			auto TurretRotator = Turret->GetForwardVector().Rotation();
+			DeltaRotator = AimAsRotator - TurretRotator;
+
+			if (FMath::Abs(DeltaRotator.Yaw) > 1.0f)
+			{
+				float Yaw = DeltaRotator.Yaw;
+				if (Yaw > 0.0f)
+				{
+					if (Yaw > 180.0f)
+					{
+						Yaw = (Yaw - 180) * (-1);
+					}
+				}
+				else
+				{
+					if (Yaw < 180.0f)
+					{
+						Yaw = (Yaw + 180) * (-1);
+					}
+				}
+
+				Turret->Rotate(Yaw);
+			}
+		}
+		else
+		{
+			auto  time = GetWorld()->GetTimeSeconds();
+			//UE_LOG(LogTemp, Warning, TEXT("%f: %s has no solution to shot at target."), time, *GetOwner()->GetName());
+			//Barrel->Elevate(-1);
 		}
 	}
 }
@@ -40,14 +78,7 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
 	Barrel = BarrelToSet;
 }
 
-void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
 {
-	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	auto AimAsRotator = AimDirection.Rotation();
-	auto DeltaRotator = AimAsRotator - BarrelRotator;
-
-	//UE_LOG(LogTemp, Warning, TEXT("%s's delta rotator: %s"), *GetOwner()->GetName(), *DeltaRotator.ToString());
-
-	Barrel->Elevate(5);
+	Turret = TurretToSet;
 }
-
