@@ -35,7 +35,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 			auto AimAsRotator = AimDirection.Rotation();
 			auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-			if (FMath::Abs(DeltaRotator.Pitch) > 1.0f)
+			if (FMath::Abs(DeltaRotator.Pitch) > 0.1f)
 			{
 				Barrel->Elevate(DeltaRotator.Pitch);
 			}
@@ -43,7 +43,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 			auto TurretRotator = Turret->GetForwardVector().Rotation();
 			DeltaRotator = AimAsRotator - TurretRotator;
 
-			if (FMath::Abs(DeltaRotator.Yaw) > 1.0f)
+			if (FMath::Abs(DeltaRotator.Yaw) > 0.1f)
 			{
 				float Yaw = DeltaRotator.Yaw;
 				if (Yaw > 0.0f)
