@@ -30,7 +30,8 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::LaunchProjectile(float Speed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tank fires with LaunchSpeed %f"), Speed);
+	// UE_LOG(LogTemp, Warning, TEXT("Tank fires with LaunchSpeed %f"), Speed);
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovement->Activate(true);
+	ProjectileMovement->AddRadialImpulse(FVector::ZeroVector, 100.0f, 10.0f, ERadialImpulseFalloff::RIF_Linear, false);
 }

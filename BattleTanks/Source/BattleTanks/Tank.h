@@ -39,7 +39,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Setup)
 		float LaunchSpeed = 4000; 
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditAnywhere, Category = Setup) //EditDefaultsOnly - Csak a Blueprinten állítható
 		float ReloadTimeInSeconds = 3; 
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<AProjectile> ProjectileBlueprint;
