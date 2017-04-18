@@ -20,6 +20,7 @@ public:
 		void ThrottleDown(bool Pressed);
 	UFUNCTION(BlueprintCallable, Category = Input)
 		void InputUpdate();
+		void SetTrackAnalogAxis(float NewThrottle);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Setup)

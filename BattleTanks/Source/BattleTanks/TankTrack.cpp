@@ -16,7 +16,7 @@ void UTankTrack::InputUpdate()
 	{
 		if (TrackAnalogAxis > 0)
 		{
-			TrackAnalogAxis -= TrackChangeSpeed;
+			TrackAnalogAxis -= TrackChangeSpeed * 5.0f;
 		}
 	}
 
@@ -31,9 +31,10 @@ void UTankTrack::InputUpdate()
 	{
 		if (TrackAnalogAxis < 0)
 		{
-			TrackAnalogAxis += TrackChangeSpeed;
+			TrackAnalogAxis += TrackChangeSpeed * 5.0f;
 		}
 	}
+
 	if (TrackAnalogAxis > 1.0f)
 	{
 		TrackAnalogAxis = 1.0f;
@@ -59,3 +60,9 @@ void UTankTrack::ThrottleDown(bool Pressed)
 	ThrottleDownPressed = Pressed;
 }
 
+void UTankTrack::SetTrackAnalogAxis(float NewThrottle)
+{
+	TrackAnalogAxis = NewThrottle;
+	UE_LOG(LogTemp, Warning, TEXT("TrackAnalogAxis: %f"), TrackAnalogAxis);
+	// TODO Remove Log
+}
